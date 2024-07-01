@@ -1,1 +1,2 @@
 add_subdirectory(dynamic_packed_container)
+add_subdirectory(dyn_array)
