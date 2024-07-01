@@ -21,3 +21,5 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 
 # Enable testing for this project.
 enable_testing()
+
+add_subdirectory(libs)
