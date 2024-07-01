@@ -1,0 +1,17 @@
+---
+# https://clang.llvm.org/extra/clang-tidy/checks/list.html
+Checks: "*,
+        -abseil*,
+        -bugprone*,
+        -clang*,
+        -cppcoreguidelines*,
+        -google*,
+        -linuxkernel*,
+        -llvm*,
+        -misc*,
+        -modernize*,
+        -readability-*
+"
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle: none

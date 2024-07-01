@@ -1,0 +1,4 @@
+﻿# https://zed0.co.uk/clang-format-configurator/
+---
+Language: Cpp # This means both C and Cpp.
+BasedOnStyle: Google
