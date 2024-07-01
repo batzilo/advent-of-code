@@ -23,6 +23,19 @@ target_link_libraries(
     dynamic_packed_container
 )
 
+add_executable(dyn_stack_tests tests/dyn_stack_tests.c)
+
+target_link_libraries(
+  dyn_stack_tests
+  PRIVATE
+  ${THIS_LIB}
+)
+
+add_test(
+    NAME dyn_stack_tests
+    COMMAND $<TARGET_FILE:dyn_stack_tests>
+)
+
 # FIXME: make this an argument.
 set(LINT_TARGET_NAME ${THIS_LIB})
 Lint()
