@@ -20,3 +20,5 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -march=native -std=c99")
 
 # Enable testing for this project.
 enable_testing()
+
+add_subdirectory(libs)
