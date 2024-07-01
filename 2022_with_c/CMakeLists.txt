@@ -24,3 +24,4 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
 enable_testing()
 
 add_subdirectory(libs)
+add_subdirectory(aoc2022)
