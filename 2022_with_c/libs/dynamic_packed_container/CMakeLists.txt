@@ -16,6 +16,19 @@ target_include_directories(
   include
 )
 
+add_executable(dpc_tests tests/dpc_tests.c)
+
+target_link_libraries(
+  dpc_tests
+  PRIVATE
+  ${THIS_LIB}
+)
+
+add_test(
+  NAME dpc_tests
+  COMMAND $<TARGET_FILE:dpc_tests>
+)
+
 # FIXME: make this an argument.
 set(LINT_TARGET_NAME ${THIS_LIB})
 Lint()
