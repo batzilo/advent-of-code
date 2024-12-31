@@ -21,6 +21,24 @@ forever.
 
 * To see the Valgrind output, check out `build/Testing/Temporary/LastTest.log`.
 
+Known limitations of the testing infrastructure:
+
+* no test discovery: tests must be manually included, it is easy to write a test
+  and forget to add it to the list of tests at the end of the file
+* no setUp / tearDown functionality, tests have a lot of duplicate code
+* not able to run individual tests (functions) from the CLI
+* not able to run some tests (unit tests) but not others (Valgrind) from the CLI
+* if a test fails, it is not clear from the CLI which test (function) failed,
+  you have to check the logs and search for a failed assertion
+* the logs from tests are from all functions in the test, there's no easy way to
+  tell them apart
+* using a very basic `assert()` function, in case of assertion failure it does
+  not print the different values (expected VS actual) and it does not support
+  printing a custom message
+
+See https://scalameta.org/munit/docs/assertions.html for some ideas on basic
+assertion handling.
+
 Future ideas:
 
 * Use my own heap allocator, maybe https://www.youtube.com/watch?v=CulF4YQt6zA
