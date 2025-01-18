@@ -10,9 +10,11 @@
 bool solve_part_one(char* infile, int* sol) {
   (void)infile;
   (void)sol;
+  return true;
 }
 
 bool solve_part_two(char* infile, int* sol) {
   (void)infile;
   (void)sol;
+  return true;
 }

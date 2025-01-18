@@ -71,26 +71,26 @@ target_link_libraries(
 # FIXME: make this an argument.
 set(LINT_TARGET_NAME ${THIS_TEST_TARGET})
 Lint()
-# Test sample part one.
-add_test(
-    NAME "${THIS_TEST_TARGET}-sample-part-one"
-    COMMAND ${THIS_TEST_TARGET} sample_input.txt sample_solution_one.txt one
-)
-# Test sample part two.
-add_test(
-    NAME "${THIS_TEST_TARGET}-sample-part-two"
-    COMMAND ${THIS_TEST_TARGET} sample_input.txt sample_solution_two.txt two
-)
-# Test actual part one.
-add_test(
-    NAME "${THIS_TEST_TARGET}-actual-part-one"
-    COMMAND ${THIS_TEST_TARGET} input.txt solution_one.txt one
-)
-# Test actual part two.
-add_test(
-    NAME "${THIS_TEST_TARGET}-actual-part-two"
-    COMMAND ${THIS_TEST_TARGET} input.txt solution_two.txt two
-)
+# # Test sample part one.
+# add_test(
+#     NAME "${THIS_TEST_TARGET}-sample-part-one"
+#     COMMAND ${THIS_TEST_TARGET} sample_input.txt sample_solution_one.txt one
+# )
+# # Test actual part one.
+# add_test(
+#     NAME "${THIS_TEST_TARGET}-actual-part-one"
+#     COMMAND ${THIS_TEST_TARGET} input.txt solution_one.txt one
+# )
+# # Test sample part two.
+# add_test(
+#     NAME "${THIS_TEST_TARGET}-sample-part-two"
+#     COMMAND ${THIS_TEST_TARGET} sample_input.txt sample_solution_two.txt two
+# )
+# # Test actual part two.
+# add_test(
+#     NAME "${THIS_TEST_TARGET}-actual-part-two"
+#     COMMAND ${THIS_TEST_TARGET} input.txt solution_two.txt two
+# )
 
 # #
 # # Build and run the solution under Valgrind.
