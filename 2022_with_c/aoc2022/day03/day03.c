@@ -16,6 +16,8 @@ int aztoi(char c) {
 }
 
 bool solve_part_one(char* infile, int* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
@@ -33,7 +35,8 @@ bool solve_part_one(char* infile, int* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret;
   }
 
   while (fgets(line, sizeof line, fp)) {
@@ -50,7 +53,8 @@ bool solve_part_one(char* infile, int* sol) {
       fprintf(stderr, "Rucksack has %zd elements, not an even number!\n",
               rucksack_num_elements);
       *sol = -1;
-      return false;
+      res = false;
+      goto ret_close;
     }
 
     // Compute the size of each compartment.
@@ -72,7 +76,8 @@ bool solve_part_one(char* infile, int* sol) {
       if (index == -1) {
         fprintf(stderr, "Unknown item: %c\n", c);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
       }
       left[index] += 1;
 
@@ -82,7 +87,8 @@ bool solve_part_one(char* infile, int* sol) {
       if (index == -1) {
         fprintf(stderr, "Unknown item: %c\n", c);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
       }
       right[index] += 1;
     }
@@ -98,15 +104,21 @@ bool solve_part_one(char* infile, int* sol) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret_close;
   }
 
-  fclose(fp);
+  res = true;
   *sol = score;
-  return true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }
 
 bool solve_part_two(char* infile, int* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
@@ -141,7 +153,8 @@ bool solve_part_two(char* infile, int* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret;
   }
 
   int counter = 0;
@@ -167,7 +180,8 @@ bool solve_part_two(char* infile, int* sol) {
                 "Internal error: counter is `%d` should be either 0, 1, or 2\n",
                 counter);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
     }
     memcpy(ptr, line, strlen(line));
 
@@ -192,7 +206,8 @@ bool solve_part_two(char* infile, int* sol) {
       if (index == -1) {
         fprintf(stderr, "Unknown item: %c\n", c);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
       }
       a_ctr[index] += 1;
     }
@@ -202,7 +217,8 @@ bool solve_part_two(char* infile, int* sol) {
       if (index == -1) {
         fprintf(stderr, "Unknown item: %c\n", c);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
       }
       b_ctr[index] += 1;
     }
@@ -212,7 +228,8 @@ bool solve_part_two(char* infile, int* sol) {
       if (index == -1) {
         fprintf(stderr, "Unknown item: %c\n", c);
         *sol = -1;
-        return false;
+        res = false;
+        goto ret_close;
       }
       c_ctr[index] += 1;
     }
@@ -242,10 +259,14 @@ bool solve_part_two(char* infile, int* sol) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret_close;
   }
 
-  fclose(fp);
+  res = true;
   *sol = score;
-  return true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }

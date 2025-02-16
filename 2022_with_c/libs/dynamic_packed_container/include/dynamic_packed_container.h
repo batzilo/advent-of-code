@@ -64,7 +64,7 @@ struct dynamic_packed_container;
 bool dpc_create(struct dynamic_packed_container** dpcpp);
 
 /*
- * Destroy the dynamic packed container pointed by `dpcp`.
+ * Destroy the dynamic packed container pointed by `dpcpp`.
  * On success, returns true and `dpcpp` is `NULL`.
  * Otherwise, returns false.
  */

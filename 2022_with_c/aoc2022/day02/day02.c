@@ -54,10 +54,11 @@ bool parse_input_to_dyn_array(char* infile, struct dyn_array* dap) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     res = false;
-    goto ret;
+    goto ret_close;
   }
 
   res = true;
+ret_close:
   fclose(fp);
 ret:
   return res;

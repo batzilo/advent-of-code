@@ -36,29 +36,28 @@ bool parse(char* infile, size_t num_of_chars, int* sol) {
     fprintf(stderr, "malloc returned NULL\n");
     perror("malloc");
     res = false;
-    goto ret;
+    goto ret_close;
   }
 
   size_t index_last_received = 0;
-  char c;
   *sol = 0;
 
   for (size_t i = 0; i < num_of_chars; i++) {
-    c = fgetc(fp);
-    if (!c) {
+    int c = fgetc(fp);
+    if (c == EOF) {
       fprintf(stderr, "fgetc returned EOF early");
       perror("fgetc");
       res = false;
       goto ret_free;
     }
-    last_chars_received[index_last_received] = c;
+    last_chars_received[index_last_received] = (char)c;
     index_last_received = (index_last_received + 1) % num_of_chars;
     (*sol)++;
   }
 
-  c = fgetc(fp);
-  while (c) {
-    last_chars_received[index_last_received] = c;
+  int c = fgetc(fp);
+  while (c != EOF) {
+    last_chars_received[index_last_received] = (char)c;
     index_last_received = (index_last_received + 1) % num_of_chars;
     (*sol)++;
 
@@ -70,11 +69,12 @@ bool parse(char* infile, size_t num_of_chars, int* sol) {
     c = fgetc(fp);
   }
   *sol = -1;
-
-  fclose(fp);
+  res = false;
 
 ret_free:
   free(last_chars_received);
+ret_close:
+  fclose(fp);
 ret:
   return res;
 }

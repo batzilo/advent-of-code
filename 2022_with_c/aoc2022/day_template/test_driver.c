@@ -17,8 +17,8 @@ int main(int argc, char *argv[]) {
   char *solfile = argv[2];
   char *part = argv[3];
 
-  int solution;
-  int expected_solution;
+  int solution = 0; // dummy value
+  int expected_solution = 42; // dummy value
   bool ret;
 
   if (streq(part, "one")) {

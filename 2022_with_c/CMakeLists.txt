@@ -20,6 +20,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -march=native -std=c99")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
 
+# Enable the generation of the compilation database.
+# This will generate a compile_commands.json file inside the build directory.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Enable testing for this project.
 enable_testing()
 

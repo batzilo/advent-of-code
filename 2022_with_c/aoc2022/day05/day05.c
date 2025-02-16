@@ -8,9 +8,18 @@
 #include "dyn_stack.h"
 
 bool solve_part_one(char* infile, char* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
+
+  // Assume that there are no more than 16 stacks of crates.
+  size_t max_stacks = 16;
+  struct dyn_array* piles[max_stacks];
+  struct dyn_stack* stacks[max_stacks];
+
+  char solution[max_stacks];
 
   FILE* fp;
   fp = fopen(infile, "r");
@@ -18,27 +27,26 @@ bool solve_part_one(char* infile, char* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     memcpy(sol, "error", 5);
-    return false;
+    res = false;
+    goto ret;
   }
 
-  // Assume that there are no more than 16 stacks of crates.
-  size_t max_stacks = 16;
-  struct dyn_array* piles[max_stacks];
-  struct dyn_stack* stacks[max_stacks];
   for (size_t i = 0; i < max_stacks; i++) {
     struct dyn_array** dapp = &piles[i];
     *dapp = NULL;
     if (!dyn_array_create(dapp)) {
       fprintf(stderr, "ERR: Failed to create a dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     struct dyn_stack** dspp = &stacks[i];
     *dspp = NULL;
     if (!dyn_stack_create(dspp)) {
       fprintf(stderr, "ERR: Failed to create a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
   }
 
@@ -74,7 +82,8 @@ bool solve_part_one(char* infile, char* sol) {
             if (!dyn_array_append(this_pile, &line[i], sizeof(line[i]))) {
               fprintf(stderr, "Failed to add element to dynamic array\n");
               memcpy(sol, "error", 5);
-              return false;
+              res = false;
+              goto ret_close;
             }
             // printf("Added crate `%c' to stack %zd\n", line[i], pile_index);
           } else if (line[i] >= '1' && line[i] <= '9') {
@@ -83,7 +92,8 @@ bool solve_part_one(char* infile, char* sol) {
             fprintf(stderr, "Failed to parse line, unknown character: `%c'\n",
                     line[i]);
             memcpy(sol, "error", 5);
-            return false;
+            res = false;
+            goto ret_close;
           }
           break;
       }
@@ -123,7 +133,8 @@ bool solve_part_one(char* infile, char* sol) {
           stderr,
           "ERR: Failed to get element count from dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     if (element_count != 0) {
       for (size_t j = element_count; j != 0; j--) {
@@ -134,7 +145,8 @@ bool solve_part_one(char* infile, char* sol) {
                   "Terminating\n",
                   j);
           memcpy(sol, "error", 5);
-          return false;
+          res = false;
+          goto ret_close;
         }
         if (!dyn_stack_push(this_stack, &c, sizeof c)) {
           fprintf(stderr,
@@ -142,7 +154,8 @@ bool solve_part_one(char* infile, char* sol) {
                   "Terminating\n",
                   c);
           memcpy(sol, "error", 5);
-          return false;
+          res = false;
+          goto ret_close;
         }
         // printf("removed and pushed %c\n", c);
       }
@@ -185,14 +198,16 @@ bool solve_part_one(char* infile, char* sol) {
         fprintf(stderr,
                 "ERR: Failed to pop element from dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
       if (!dyn_stack_push(stacks[to_stack - 1], &c, sizeof c)) {
         fprintf(
             stderr,
             "ERR: Failed to push element into dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
     }
   }
@@ -200,11 +215,10 @@ bool solve_part_one(char* infile, char* sol) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     memcpy(sol, "error", 5);
-    return false;
+    res = false;
+    goto ret_close;
   }
-  fclose(fp);
 
-  char solution[max_stacks];
   size_t sol_i = 0;
   for (size_t i = 0; i < max_stacks; i++) {
     // Print the top of each stack
@@ -215,7 +229,8 @@ bool solve_part_one(char* infile, char* sol) {
           stderr,
           "ERR: Failed to get element count from dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     if (element_count != 0) {
       char c;
@@ -223,7 +238,8 @@ bool solve_part_one(char* infile, char* sol) {
         fprintf(stderr,
                 "ERR: Failed to peek into dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
       solution[sol_i] = c;
       sol_i++;
@@ -238,22 +254,38 @@ bool solve_part_one(char* infile, char* sol) {
     if (!dyn_array_destroy(dapp)) {
       fprintf(stderr, "ERR: Failed to destroy a dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     struct dyn_stack** dspp = &stacks[i];
     if (!dyn_stack_destroy(dspp)) {
       fprintf(stderr, "ERR: Failed to destroy a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
   }
-  return true;
+
+  res = true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }
 
 bool solve_part_two(char* infile, char* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
+
+  // Assume that there are no more than 16 stacks of crates.
+  size_t max_stacks = 16;
+  struct dyn_array* piles[max_stacks];
+  struct dyn_stack* stacks[max_stacks];
+
+  char solution[max_stacks];
 
   FILE* fp;
   fp = fopen(infile, "r");
@@ -261,27 +293,26 @@ bool solve_part_two(char* infile, char* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     memcpy(sol, "error", 5);
-    return false;
+    res = false;
+    goto ret;
   }
 
-  // Assume that there are no more than 16 stacks of crates.
-  size_t max_stacks = 16;
-  struct dyn_array* piles[max_stacks];
-  struct dyn_stack* stacks[max_stacks];
   for (size_t i = 0; i < max_stacks; i++) {
     struct dyn_array** dapp = &piles[i];
     *dapp = NULL;
     if (!dyn_array_create(dapp)) {
       fprintf(stderr, "ERR: Failed to create a dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     struct dyn_stack** dspp = &stacks[i];
     *dspp = NULL;
     if (!dyn_stack_create(dspp)) {
       fprintf(stderr, "ERR: Failed to create a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
   }
 
@@ -317,7 +348,8 @@ bool solve_part_two(char* infile, char* sol) {
             if (!dyn_array_append(this_pile, &line[i], sizeof(line[i]))) {
               fprintf(stderr, "Failed to add element to dynamic array\n");
               memcpy(sol, "error", 5);
-              return false;
+              res = false;
+              goto ret_close;
             }
             // printf("Added crate `%c' to stack %zd\n", line[i], pile_index);
           } else if (line[i] >= '1' && line[i] <= '9') {
@@ -326,7 +358,8 @@ bool solve_part_two(char* infile, char* sol) {
             fprintf(stderr, "Failed to parse line, unknown character: `%c'\n",
                     line[i]);
             memcpy(sol, "error", 5);
-            return false;
+            res = false;
+            goto ret_close;
           }
           break;
       }
@@ -366,7 +399,8 @@ bool solve_part_two(char* infile, char* sol) {
           stderr,
           "ERR: Failed to get element count from dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     if (element_count != 0) {
       for (size_t j = element_count; j != 0; j--) {
@@ -377,7 +411,8 @@ bool solve_part_two(char* infile, char* sol) {
                   "Terminating\n",
                   j);
           memcpy(sol, "error", 5);
-          return false;
+          res = false;
+          goto ret_close;
         }
         if (!dyn_stack_push(this_stack, &c, sizeof c)) {
           fprintf(stderr,
@@ -385,7 +420,8 @@ bool solve_part_two(char* infile, char* sol) {
                   "Terminating\n",
                   c);
           memcpy(sol, "error", 5);
-          return false;
+          res = false;
+          goto ret_close;
         }
         // printf("removed and pushed %c\n", c);
       }
@@ -425,7 +461,8 @@ bool solve_part_two(char* infile, char* sol) {
     if (!dyn_stack_create(&tmp_dsp)) {
       fprintf(stderr, "ERR: Failed to create a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
 
     // Execute the moves using CrateMover9001
@@ -435,14 +472,16 @@ bool solve_part_two(char* infile, char* sol) {
         fprintf(stderr,
                 "ERR: Failed to pop element from dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
       if (!dyn_stack_push(tmp_dsp, &c, sizeof c)) {
         fprintf(
             stderr,
             "ERR: Failed to push element into dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
     }
     for (size_t i = 0; i < how_many; i++) {
@@ -451,32 +490,34 @@ bool solve_part_two(char* infile, char* sol) {
         fprintf(stderr,
                 "ERR: Failed to pop element from dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
       if (!dyn_stack_push(stacks[to_stack - 1], &c, sizeof c)) {
         fprintf(
             stderr,
             "ERR: Failed to push element into dynamic stack. Terminating\n");
         memcpy(sol, "error", 5);
-        return false;
+        res = false;
+        goto ret_close;
       }
     }
 
     if (!dyn_stack_destroy(&tmp_dsp)) {
       fprintf(stderr, "ERR: Failed to destroy a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
   }
   if (!feof(fp)) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     memcpy(sol, "error", 5);
-    return false;
+    res = false;
+    goto ret_close;
   }
-  fclose(fp);
 
-  char solution[max_stacks];
   size_t sol_i = 0;
   for (size_t i = 0; i < max_stacks; i++) {
     // Print the top of each stack
@@ -510,14 +551,21 @@ bool solve_part_two(char* infile, char* sol) {
     if (!dyn_array_destroy(dapp)) {
       fprintf(stderr, "ERR: Failed to destroy a dynamic array. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
     struct dyn_stack** dspp = &stacks[i];
     if (!dyn_stack_destroy(dspp)) {
       fprintf(stderr, "ERR: Failed to destroy a dynamic stack. Terminating\n");
       memcpy(sol, "error", 5);
-      return false;
+      res = false;
+      goto ret_close;
     }
   }
-  return true;
+
+  res = true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }

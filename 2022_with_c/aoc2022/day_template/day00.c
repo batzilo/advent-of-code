@@ -8,13 +8,17 @@
 #include "dyn_stack.h"
 
 bool solve_part_one(char* infile, int* sol) {
+  bool res = false;
   (void)infile;
   (void)sol;
-  return true;
+  res = true;
+  return res;
 }
 
 bool solve_part_two(char* infile, int* sol) {
+  bool res = false;
   (void)infile;
   (void)sol;
-  return true;
+  res = true;
+  return res;
 }

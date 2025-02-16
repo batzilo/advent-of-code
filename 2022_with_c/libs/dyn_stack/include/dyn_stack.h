@@ -8,7 +8,7 @@
  * built on top of the Dynamic Packed Container (DPC) data structure.
  *
  * Elements can be of any type, but all elements must have the same type.
- * The stack stores the elements themselves (not pointers to them).
+ * The stack stores (copies of) the elements themselves (not pointers to them).
  */
 struct dyn_stack;
 
@@ -35,7 +35,7 @@ bool dyn_stack_destroy(struct dyn_stack** dspp);
 bool dyn_stack_count(struct dyn_stack* dsp, size_t* cnt);
 
 /*
- * Push the element pointed by `element`
+ * Push (copy) the element pointed by `element`
  * which is of size `element_size`
  * at the top of the dynamic stack pointed by `dsp`.
  *

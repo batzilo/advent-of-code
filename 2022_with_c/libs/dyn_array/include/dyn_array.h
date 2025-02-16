@@ -8,7 +8,7 @@
  * built on top of the Dynamic Packed Container (DPC) data structure.
  *
  * Elements can be of any type, but all elements must have the same type.
- * The array stores the elements themselves (not pointers to them).
+ * The array stores (copies of) the elements themselves (not pointers to them).
  *
  * Appending elements at the end is supported.
  * Access at a given index is supported.
@@ -30,7 +30,7 @@ bool dyn_array_create(struct dyn_array** dapp);
 bool dyn_array_destroy(struct dyn_array** dapp);
 
 /*
- * Add the element pointed by `element`
+ * Add a copy of the element pointed by `element`
  * which is of size `element_size`
  * at the end of the dynamic array pointed by `dap`.
  *
@@ -49,8 +49,7 @@ bool dyn_array_count(struct dyn_array* dap, size_t* cnt);
 
 /*
  * The pointer `element` points at a copy of the element
- * found at position `index`
- * in the dynamic array pointed by `dap`.
+ * found at position `index` in the dynamic array pointed by `dap`.
  *
  * Returns true on success, false otherwise.
  */

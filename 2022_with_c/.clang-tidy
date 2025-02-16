@@ -2,7 +2,10 @@
 # https://clang.llvm.org/extra/clang-tidy/checks/list.html
 Checks: "*,
         -abseil*,
+        -altera-*,
+        -android-*,
         -bugprone*,
+        -cert-*,
         -clang*,
         -cppcoreguidelines*,
         -google*,

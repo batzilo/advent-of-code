@@ -6,6 +6,8 @@
 #include "aoc2022day04.h"
 
 bool solve_part_one(char* infile, int* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
@@ -23,7 +25,8 @@ bool solve_part_one(char* infile, int* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret;
   }
 
   while (fgets(line, sizeof line, fp)) {
@@ -44,15 +47,21 @@ bool solve_part_one(char* infile, int* sol) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret_close;
   }
-  fclose(fp);
 
+  res = true;
   *sol = contains;
-  return true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }
 
 bool solve_part_two(char* infile, int* sol) {
+  bool res = false;
+
   // Assume each line is less than 128 characters long.
   size_t len = 128;
   char line[len];
@@ -70,7 +79,8 @@ bool solve_part_two(char* infile, int* sol) {
     fprintf(stderr, "Failed to open file '%s'.\n", infile);
     perror("fopen");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret;
   }
   while (fgets(line, sizeof line, fp)) {
     // Each line contains one pair of section assignments.
@@ -92,10 +102,14 @@ bool solve_part_two(char* infile, int* sol) {
     fprintf(stderr, "Failed to read from file '%s'.\n", infile);
     perror("fgets");
     *sol = -1;
-    return false;
+    res = false;
+    goto ret_close;
   }
-  fclose(fp);
 
+  res = true;
   *sol = overlaps;
-  return true;
+ret_close:
+  fclose(fp);
+ret:
+  return res;
 }
